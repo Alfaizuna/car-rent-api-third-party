@@ -1,23 +1,17 @@
-package com.finals.carrentapi.model;
-
+package com.finals.carrentapi.payload.request;
 
 import com.finals.carrentapi.enums.CarStatus;
 import com.finals.carrentapi.enums.CarType;
 import com.finals.carrentapi.enums.Driver;
-import lombok.*;
+import lombok.Data;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
-import java.util.Date;
 
-@Setter
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
-public class Car {
-
+@Data
+public class FinalOrderRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idCar;
@@ -48,6 +42,4 @@ public class Car {
     private String imageLink;
 
     private Integer isDeleted = 0;
-
-
 }

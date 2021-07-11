@@ -1,6 +1,10 @@
 package com.finals.carrentapi.controller;
 
+import com.finals.carrentapi.enums.Driver;
 import com.finals.carrentapi.model.Car;
+import com.finals.carrentapi.payload.request.ChooseOrderRequest;
+import com.finals.carrentapi.payload.request.PaymentOrder;
+import com.finals.carrentapi.payload.response.ChooseOrderResponse;
 import com.finals.carrentapi.service.MyBatisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -37,5 +41,43 @@ public class RestApiController {
     public String deleteCar(@PathVariable("id") Long id) throws IOException {
         myBatisService.deleteCar(id);
         return "Data has been deleted!";
+    }
+
+    //--------------------------------------------------------------------------------------
+
+    @PostMapping("/chooseFirstOrder")
+    public List<Car> getCarListFirstOrder(@RequestBody ChooseOrderRequest request) throws IOException {
+
+        List<Car> cars = myBatisService.getAvailableCarsByCity(request.getCity());
+
+        return cars;
+    }
+
+    @PostMapping("/chooseFirstOrderById")
+    public Car getCarListFirstOrderById(@RequestBody ChooseOrderRequest request) throws IOException {
+        Car car =myBatisService.getCarById(request);
+        return car;
+    }
+
+    @PostMapping("/paymentOrderCar")
+    public String paymentOrder(@RequestBody PaymentOrder paymentOrder){
+        //post final order
+
+        //delay
+        delay();
+        //find payment status
+
+        //return
+
+
+        return null;
+    }
+
+    public static void delay(){
+        try{
+            Thread.sleep(30000);
+        }catch (Exception e){
+            System.out.println(e);
+        }
     }
 }

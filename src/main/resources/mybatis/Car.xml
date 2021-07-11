@@ -18,6 +18,14 @@
         city,
         vendorName,
         carStatus,
+        paymentStatus,
+        review,
+        rating,
+        baseRating,
+        refund,
+        cleanTrip,
+        reschedule,
+        imageLink,
         isDeleted
         )
         VALUES (
@@ -33,6 +41,14 @@
         #{city},
         #{vendorName},
         #{carStatus},
+        #{paymentStatus},
+        #{review},
+        #{rating},
+        #{baseRating},
+        #{refund},
+        #{cleanTrip},
+        #{reschedule},
+        #{imageLink},
         #{isDeleted}
         );
     </insert>
@@ -50,11 +66,36 @@
         <result property="city" column="city"/>
         <result property="vendorName" column="vendorName"/>
         <result property="carStatus" column="carStatus"/>
+        <result property="paymentStatus" column="paymentStatus"/>
+        <result property="review" column="review"/>
+        <result property="rating" column="rating"/>
+        <result property="baseRating" column="baseRating"/>
+        <result property="refund" column="refund"/>
+        <result property="cleanTrip" column="cleanTrip"/>
+        <result property="reschedule" column="reschedule"/>
+        <result property="imageLink" column="imageLink"/>
     </resultMap>
 
     <select id="getAvailableCars" parameterType="java.lang.String" resultMap="result">
         SELECT * from cars where carStatus = #{carStatus};
     </select>
+
+    <select id="getAvailableCarsByCity" parameterType="java.lang.String" resultMap="resultByCity">
+        SELECT * from cars where city = #{city};
+    </select>
+
+    <resultMap id="resultByCity" type="com.finals.carrentapi.model.Car">
+        <result property="idCar" column="idCar"/>
+        <result property="brand" column="brand"/>
+        <result property="carName" column="carName"/>
+        <result property="carType" column="carType"/>
+        <result property="amountOfPassenger" column="amountOfPassenger"/>
+        <result property="amountOfLuggage" column="amountOfLuggage"/>
+        <result property="pricePerDay" column="pricePerDay"/>
+        <result property="driver" column="driver"/>
+        <result property="startDateAndTime" column="startDateAndTime"/>
+        <result property="imageLink" column="imageLink"/>
+    </resultMap>
 
     <select id="getById" parameterType="long" resultMap="result">
         SELECT * FROM CARS WHERE idCar = #{idCar};
@@ -73,6 +114,14 @@
         city=#{city},
         vendorName=#{vendorName},
         carStatus=#{carStatus},
+        paymentStatus=#{paymentStatus},
+        review=#{review},
+        rating=#{rating},
+        baseRating=#{baseRating},
+        refund=#{refund},
+        cleanTrip=#{cleanTrip},
+        reschedule=#{reschedule},
+        imageLink=#{imageLink},
         isDeleted=#{isDeleted}
         WHERE idCar = #{idCar};
     </update>

@@ -1,27 +1,25 @@
 package com.finals.carrentapi.service;
 
+import com.finals.carrentapi.enums.CarStatus;
+import com.finals.carrentapi.enums.Driver;
 import com.finals.carrentapi.model.Car;
+import com.finals.carrentapi.payload.request.ChooseOrderRequest;
 import com.finals.carrentapi.util.CommonMessage;
-import com.finals.carrentapi.util.MapperUtil;
-import com.google.gson.Gson;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.modelmapper.convention.MatchingStrategies;
-import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.time.Instant;
-import java.time.temporal.TemporalAccessor;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
 @Service
-public class MyBatisServiceImpl implements MyBatisService{
+public class MyBatisServiceImpl implements MyBatisService {
     private SqlSession session;
 
     public void connectMyBatis() throws IOException {
@@ -34,12 +32,37 @@ public class MyBatisServiceImpl implements MyBatisService{
     public void insertCar(Car car) throws IOException {
         connectMyBatis();
 
-        car.setStartDateAndTime(Date.from(Instant.now()));
-        car.setEndDateAndTime(Date.from(Instant.now()));
+//        car.setStartDateAndTime(Date.from(Instant.now()));
+//        car.setEndDateAndTime(Date.from(Instant.now()));
+        car.setDriver(null);
+        car.setCarStatus(CarStatus.AVAILABLE);
+        car.setPaymentStatus(null);
+        car.setReview(null);
+        car.setCleanTrip(true);
+        car.setRefund(true);
+        car.setReschedule(true);
+        car.setRating(10.0);
+        car.setBaseRating(10);
+        car.setImageLink(null);
 
         session.insert(CommonMessage.INSERT_CAR, car);
         session.commit();
         session.close();
+    }
+
+    @Override
+    public Car getCarById(ChooseOrderRequest chooseOrderRequest) throws IOException {
+        connectMyBatis();
+
+//        List<Car> cars = session.selectList(CommonMessage.GET_AVA_CAR, CommonMessage.AVAILABLE);
+        Car car = session.selectOne("Car.getById", chooseOrderRequest.getIdCar());
+        car.setDriver(chooseOrderRequest.getDriver());
+        car.setStartDateAndTime(chooseOrderRequest.getStartDateAndTime());
+        car.setEndDateAndTime(chooseOrderRequest.getEndDateAndTime());
+
+        session.commit();
+        session.close();
+        return car;
     }
 
     @Override
@@ -54,15 +77,28 @@ public class MyBatisServiceImpl implements MyBatisService{
     }
 
     @Override
+    public List<Car> getAvailableCarsByCity(String city) throws IOException {
+        connectMyBatis();
+
+        List<Car> cars = session.selectList(CommonMessage.GET_AVA_CAR_BY_CITY, city);
+//        for(Car car : cars){
+//            car.setDriver(driver);
+//        }
+
+        session.commit();
+        session.close();
+        return cars;
+    }
+
+    @Override
     public Car updateCar(long id, Car car) throws IOException {
         connectMyBatis();
 
-        //select a particular student using id
+        //select a particular car using id
         Car getCarById = (Car) session.selectOne("Car.getById", id);
         System.out.println(getCarById.toString());
 
-        //Set new values to the mail and phone number of the student
-//        Car car2 = MapperUtil.parse(getCarById, Car.class, MatchingStrategies.STRICT);
+        //Set new values of the car
         getCarById.setIdCar(id);
         getCarById.setBrand(car.getBrand());
         getCarById.setCarName(car.getCarName());
@@ -75,23 +111,15 @@ public class MyBatisServiceImpl implements MyBatisService{
         getCarById.setVendorName(car.getVendorName());
         getCarById.setCarStatus(car.getCarStatus());
         getCarById.setIsDeleted(0);
-        getCarById.setStartDateAndTime(Date.from(Instant.now()));
-        getCarById.setEndDateAndTime(Date.from(Instant.now()));
+        getCarById.setStartDateAndTime(car.getStartDateAndTime());
+        getCarById.setEndDateAndTime(car.getEndDateAndTime());
+
         //Update the student record
-        session.update("Car.updateCar",getCarById);
+        session.update("Car.updateCar", getCarById);
         System.out.println("Record updated successfully");
         session.commit();
         session.close();
         return getCarById;
-        //verifying the record
-//        Car c = (Car) session.selectOne("Student.getById", id);
-//        System.out.println("Details of the student after update operation" );
-//        System.out.println(c.toString());
-//        session.commit();
-//        session.close();
-//
-//        session.commit();
-//        session.close();
     }
 
     public void deleteCar(long id) throws IOException {
