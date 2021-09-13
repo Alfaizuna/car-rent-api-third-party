@@ -4,6 +4,7 @@ import com.finals.carrentapi.enums.CarStatus;
 import com.finals.carrentapi.enums.Driver;
 import com.finals.carrentapi.model.Car;
 import com.finals.carrentapi.payload.request.ChooseOrderRequest;
+import com.finals.carrentapi.payload.request.FinalOrderRequest;
 import com.finals.carrentapi.util.CommonMessage;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -63,6 +64,25 @@ public class MyBatisServiceImpl implements MyBatisService {
         session.commit();
         session.close();
         return car;
+    }
+
+    @Override
+    public Car checkPaymentStatusByIdCar(long idCar) throws IOException {
+        connectMyBatis();
+        Car car = session.selectOne("Car.checkPaymentStatusByIdCar", idCar);
+        session.commit();
+        session.close();
+        return car;
+    }
+
+    @Override
+    public void updateFinalCar(FinalOrderRequest finalOrderRequest) throws IOException {
+        connectMyBatis();
+
+        session.update("Car.updateFinal", finalOrderRequest);
+
+        session.commit();
+        session.close();
     }
 
     @Override

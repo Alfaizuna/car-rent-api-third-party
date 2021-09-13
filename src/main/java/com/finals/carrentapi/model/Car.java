@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Setter
 @Getter
@@ -33,11 +32,8 @@ public class Car {
     private String city;
     private String vendorName;
     private CarStatus carStatus;
-
-    //    private Rating rating;
     private Double rating;
     private Integer baseRating = 10;
-    //    private FeatureCarRental featureCarRental;
     private boolean cleanTrip;
     private boolean refund;
     private boolean reschedule;

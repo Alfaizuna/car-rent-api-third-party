@@ -1,10 +1,8 @@
 package com.finals.carrentapi.controller;
 
-import com.finals.carrentapi.enums.Driver;
 import com.finals.carrentapi.model.Car;
 import com.finals.carrentapi.payload.request.ChooseOrderRequest;
-import com.finals.carrentapi.payload.request.PaymentOrder;
-import com.finals.carrentapi.payload.response.ChooseOrderResponse;
+import com.finals.carrentapi.payload.request.FinalOrderRequest;
 import com.finals.carrentapi.service.MyBatisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -55,28 +53,30 @@ public class RestApiController {
 
     @PostMapping("/chooseFirstOrderById")
     public Car getCarListFirstOrderById(@RequestBody ChooseOrderRequest request) throws IOException {
-        Car car =myBatisService.getCarById(request);
+        Car car = myBatisService.getCarById(request);
         return car;
     }
 
-    @PostMapping("/paymentOrderCar")
-    public String paymentOrder(@RequestBody PaymentOrder paymentOrder){
+    @PostMapping("/finalOrderCar")
+    public String paymentOrder(@RequestBody FinalOrderRequest finalOrderRequest) throws IOException {
         //post final order
-
+        myBatisService.updateFinalCar(finalOrderRequest);
         //delay
         delay();
         //find payment status
-
+        Car car = myBatisService.checkPaymentStatusByIdCar(finalOrderRequest.getIdCar());
         //return
-
-
-        return null;
+        if (car.getPaymentStatus().equals("PAID")) {
+            return "Payment Berhasil";
+        } else {
+            return "Payment Gagal!";
+        }
     }
 
-    public static void delay(){
-        try{
+    public static void delay() {
+        try {
             Thread.sleep(30000);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
     }

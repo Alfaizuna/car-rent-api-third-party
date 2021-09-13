@@ -84,6 +84,10 @@
         SELECT * from cars where city = #{city};
     </select>
 
+    <select id="checkPaymentStatusByIdCar" parameterType="java.lang.Long" resultType="com.finals.carrentapi.model.Car">
+        SELECT * from cars where idCar = #{idCar};
+    </select>
+
     <resultMap id="resultByCity" type="com.finals.carrentapi.model.Car">
         <result property="idCar" column="idCar"/>
         <result property="brand" column="brand"/>
@@ -126,7 +130,32 @@
         WHERE idCar = #{idCar};
     </update>
 
-    <delete id = "deleteById" parameterType = "long">
+    <update id="updateFinal" parameterType="com.finals.carrentapi.payload.request.FinalOrderRequest">
+        UPDATE CARS SET BRAND = #{brand},
+        carName=#{carName},
+        carType=#{carType},
+        amountOfPassenger=#{amountOfPassenger},
+        amountOfLuggage=#{amountOfLuggage},
+        pricePerDay=#{pricePerDay},
+        driver=#{driver},
+        startDateAndTime=#{startDateAndTime},
+        endDateAndTime=#{endDateAndTime},
+        city=#{city},
+        vendorName=#{vendorName},
+        carStatus=#{carStatus},
+        paymentStatus=#{paymentStatus},
+        review=#{review},
+        rating=#{rating},
+        baseRating=#{baseRating},
+        refund=#{refund},
+        cleanTrip=#{cleanTrip},
+        reschedule=#{reschedule},
+        imageLink=#{imageLink},
+        isDeleted=#{isDeleted}
+        WHERE idCar = #{idCar};
+    </update>
+
+    <delete id="deleteById" parameterType="long">
         DELETE from CARS WHERE idCar = #{idCar};
     </delete>
 

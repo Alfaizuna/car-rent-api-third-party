@@ -27,11 +27,8 @@ public class FinalOrderRequest {
     private String city;
     private String vendorName;
     private CarStatus carStatus;
-
-    //    private Rating rating;
     private Double rating;
     private Integer baseRating = 10;
-    //    private FeatureCarRental featureCarRental;
     private boolean cleanTrip;
     private boolean refund;
     private boolean reschedule;
